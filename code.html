@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Hari Charan V — EEE Engineer & AI Researcher</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #060810;
+    --bg2: #0b0f1a;
+    --bg3: #111827;
+    --cyan: #00e5ff;
+    --amber: #ffb700;
+    --green: #00ff9d;
+    --text: #e8eaf6;
+    --muted: #8892b0;
+    --border: rgba(0,229,255,0.12);
+    --card: rgba(11,15,26,0.8);
+    --font-head: 'Syne', sans-serif;
+    --font-mono: 'Space Mono', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: 14px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── CANVAS ── */
+  #grid-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.35;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 48px;
+    background: rgba(6,8,16,0.85);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: var(--cyan);
+    letter-spacing: 0.04em;
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--cyan); }
+
+  /* ── HERO ── */
+  #hero {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 120px 48px 80px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .hero-tag {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.2s forwards;
+  }
+
+  .hero-name {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: clamp(3rem, 8vw, 6.5rem);
+    line-height: 1;
+    color: #fff;
+    margin-bottom: 12px;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.35s forwards;
+  }
+
+  .hero-name span {
+    color: var(--cyan);
+    display: inline-block;
+    position: relative;
+  }
+
+  .hero-name span::after {
+    content: '';
+    position: absolute;
+    bottom: 4px; left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--cyan);
+    opacity: 0.4;
+  }
+
+  .hero-title {
+    font-family: var(--font-head);
+    font-size: clamp(1rem, 2.5vw, 1.6rem);
+    font-weight: 600;
+    color: var(--amber);
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.5s forwards;
+  }
+
+  .hero-desc {
+    max-width: 620px;
+    color: var(--muted);
+    line-height: 1.9;
+    font-size: 13px;
+    margin-bottom: 44px;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.65s forwards;
+  }
+
+  .hero-cta {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.8s forwards;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 13px 28px;
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.25s;
+    border: none;
+  }
+
+  .btn-primary {
+    background: var(--cyan);
+    color: #000;
+    font-weight: 700;
+  }
+
+  .btn-primary:hover {
+    background: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(0,229,255,0.25);
+  }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--cyan);
+    border: 1px solid var(--cyan);
+  }
+
+  .btn-outline:hover {
+    background: rgba(0,229,255,0.08);
+    transform: translateY(-2px);
+  }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 40px; left: 48px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--muted);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0;
+    animation: fadeUp 0.7s 1.1s forwards;
+  }
+
+  .scroll-line {
+    width: 40px;
+    height: 1px;
+    background: var(--muted);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .scroll-line::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: var(--cyan);
+    animation: scanLine 2s infinite;
+  }
+
+  /* ── SECTIONS ── */
+  section {
+    position: relative;
+    z-index: 1;
+    padding: 100px 48px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    margin-bottom: 16px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    max-width: 80px;
+    height: 1px;
+    background: var(--cyan);
+    opacity: 0.4;
+  }
+
+  .section-title {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: clamp(2rem, 4vw, 3rem);
+    color: #fff;
+    margin-bottom: 56px;
+    line-height: 1.1;
+  }
+
+  /* ── SKILLS ── */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+  }
+
+  .skill-category {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px;
+    transition: border-color 0.3s, transform 0.3s;
+    backdrop-filter: blur(8px);
+  }
+
+  .skill-category:hover {
+    border-color: rgba(0,229,255,0.35);
+    transform: translateY(-4px);
+  }
+
+  .skill-cat-title {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .skill-tag {
+    background: rgba(0,229,255,0.07);
+    border: 1px solid rgba(0,229,255,0.15);
+    color: var(--text);
+    border-radius: 3px;
+    padding: 4px 10px;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    transition: all 0.2s;
+  }
+
+  .skill-tag:hover {
+    background: rgba(0,229,255,0.15);
+    border-color: var(--cyan);
+    color: var(--cyan);
+  }
+
+  /* ── EXPERIENCE ── */
+  .exp-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 36px;
+    backdrop-filter: blur(8px);
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+
+  .exp-card:hover { border-color: rgba(0,229,255,0.35); }
+
+  .exp-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 100%;
+    background: linear-gradient(180deg, var(--cyan), var(--green));
+  }
+
+  .exp-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .exp-role {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 1.15rem;
+    color: #fff;
+  }
+
+  .exp-company {
+    color: var(--cyan);
+    font-size: 12px;
+    margin-top: 4px;
+  }
+
+  .exp-date {
+    background: rgba(255,183,0,0.1);
+    border: 1px solid rgba(255,183,0,0.25);
+    color: var(--amber);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+
+  .exp-bullets {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .exp-bullets li {
+    color: var(--muted);
+    font-size: 12.5px;
+    padding-left: 20px;
+    position: relative;
+    line-height: 1.7;
+  }
+
+  .exp-bullets li::before {
+    content: '▹';
+    position: absolute;
+    left: 0;
+    color: var(--cyan);
+    font-size: 12px;
+  }
+
+  /* ── PROJECTS ── */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+    gap: 20px;
+  }
+
+  .project-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 28px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+    backdrop-filter: blur(8px);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .project-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0,229,255,0.04) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .project-card:hover {
+    border-color: rgba(0,229,255,0.4);
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 30px rgba(0,229,255,0.06);
+  }
+
+  .project-icon {
+    font-size: 22px;
+    margin-bottom: 4px;
+  }
+
+  .project-title {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #fff;
+    line-height: 1.3;
+  }
+
+  .project-desc {
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.75;
+    flex: 1;
+  }
+
+  .project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 4px;
+  }
+
+  .ptag {
+    background: rgba(0,255,157,0.06);
+    border: 1px solid rgba(0,255,157,0.18);
+    color: var(--green);
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 10px;
+    letter-spacing: 0.05em;
+  }
+
+  /* ── EDUCATION ── */
+  .edu-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 36px;
+    backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 24px;
+    transition: border-color 0.3s;
+  }
+
+  .edu-card:hover { border-color: rgba(0,229,255,0.35); }
+
+  .edu-degree {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #fff;
+    margin-bottom: 6px;
+  }
+
+  .edu-school { color: var(--cyan); font-size: 13px; }
+  .edu-gpa { color: var(--muted); font-size: 12px; margin-top: 8px; }
+
+  .edu-badge {
+    background: rgba(0,229,255,0.08);
+    border: 1px solid rgba(0,229,255,0.2);
+    border-radius: 6px;
+    padding: 16px 24px;
+    text-align: center;
+  }
+
+  .edu-badge-year {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 1.6rem;
+    color: var(--cyan);
+  }
+
+  .edu-badge-label {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  /* ── LANGUAGES & ACTIVITIES ── */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  @media (max-width: 700px) { .two-col { grid-template-columns: 1fr; } }
+
+  .lang-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .lang-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 20px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    transition: border-color 0.3s;
+  }
+
+  .lang-item:hover { border-color: rgba(0,229,255,0.3); }
+
+  .lang-name {
+    font-family: var(--font-head);
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #fff;
+  }
+
+  .lang-level {
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    color: var(--amber);
+    text-transform: uppercase;
+  }
+
+  .activities-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .activity-item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    transition: border-color 0.3s;
+  }
+
+  .activity-item:hover { border-color: rgba(0,229,255,0.3); }
+
+  .activity-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--cyan);
+    margin-top: 8px;
+    flex-shrink: 0;
+  }
+
+  .activity-text {
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.65;
+  }
+
+  /* ── CONTACT ── */
+  #contact {
+    padding-bottom: 140px;
+  }
+
+  .contact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+  }
+
+  .contact-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    text-decoration: none;
+    transition: all 0.3s;
+    backdrop-filter: blur(8px);
+  }
+
+  .contact-card:hover {
+    border-color: rgba(0,229,255,0.4);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+  }
+
+  .contact-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background: rgba(0,229,255,0.1);
+    border: 1px solid rgba(0,229,255,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .contact-label {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 3px;
+  }
+
+  .contact-value {
+    font-family: var(--font-head);
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: #fff;
+    word-break: break-all;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 32px 48px;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+  }
+
+  footer span { color: var(--cyan); }
+
+  /* ── DIVIDER ── */
+  .divider {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes scanLine {
+    to { left: 100%; }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.4; }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* ── FLOATING STATUS ── */
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0,255,157,0.07);
+    border: 1px solid rgba(0,255,157,0.2);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--green);
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.05s forwards;
+  }
+
+  .status-dot {
+    width: 7px;
+    height: 7px;
+    background: var(--green);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 16px 24px; }
+    section { padding: 72px 24px; }
+    #hero { padding: 100px 24px 60px; }
+    .hero-scroll { left: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="grid-canvas"></canvas>
+
+<!-- NAV -->
+<nav>
+  <a href="#hero" class="nav-logo">HC/V</a>
+  <ul class="nav-links">
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="status-pill">
+    <span class="status-dot"></span>
+    Open to Opportunities
+  </div>
+  <p class="hero-tag">// Electrical & Electronics Engineer</p>
+  <h1 class="hero-name">Hari<br><span>Charan V</span></h1>
+  <p class="hero-title">ANN / MPPT Researcher · Embedded Systems · PCB Design</p>
+  <p class="hero-desc">
+    EEE undergrad at VIT Chennai building the future of renewable energy with neural networks and intelligent control systems.
+    From ANN-based MPPT controllers to IoT-enabled power monitoring — I engineer systems that are smart, efficient, and real.
+  </p>
+  <div class="hero-cta">
+    <a href="#projects" class="btn btn-primary">View My Work →</a>
+    <a href="https://www.linkedin.com/in/hari-charan-v-a97b9228a" target="_blank" class="btn btn-outline">LinkedIn ↗</a>
+    <a href="mailto:hari2006charan@gmail.com" class="btn btn-outline">Email Me</a>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    Scroll to explore
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SKILLS -->
+<section id="skills">
+  <p class="section-label reveal">02 // Skills</p>
+  <h2 class="section-title reveal">What I Work With</h2>
+  <div class="skills-grid reveal">
+    <div class="skill-category">
+      <div class="skill-cat-title">⚡ Simulation & Design</div>
+      <div class="skill-tags">
+        <span class="skill-tag">MATLAB/Simulink</span>
+        <span class="skill-tag">LTspice</span>
+        <span class="skill-tag">Keil Micro-Vision</span>
+      </div>
+    </div>
+    <div class="skill-category">
+      <div class="skill-cat-title">🖥️ Programming</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Python</span>
+        <span class="skill-tag">C</span>
+        <span class="skill-tag">Java</span>
+      </div>
+    </div>
+    <div class="skill-category">
+      <div class="skill-cat-title">🔌 Embedded Systems</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Microcontrollers</span>
+        <span class="skill-tag">Microprocessors</span>
+        <span class="skill-tag">Sensor Interfacing</span>
+        <span class="skill-tag">Arduino</span>
+      </div>
+    </div>
+    <div class="skill-category">
+      <div class="skill-cat-title">🧠 AI / ML</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Neural Networks</span>
+        <span class="skill-tag">ANN</span>
+        <span class="skill-tag">MPPT Control</span>
+        <span class="skill-tag">State Estimation</span>
+      </div>
+    </div>
+    <div class="skill-category">
+      <div class="skill-cat-title">🛠️ PCB Design</div>
+      <div class="skill-tags">
+        <span class="skill-tag">KiCad</span>
+        <span class="skill-tag">EasyEDA</span>
+        <span class="skill-tag">Circuit Design</span>
+        <span class="skill-tag">PCB Layout</span>
+      </div>
+    </div>
+    <div class="skill-category">
+      <div class="skill-cat-title">🌐 Systems</div>
+      <div class="skill-tags">
+        <span class="skill-tag">IoT</span>
+        <span class="skill-tag">Hybrid Systems</span>
+        <span class="skill-tag">PID Control</span>
+        <span class="skill-tag">Power Electronics</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <p class="section-label reveal">03 // Experience</p>
+  <h2 class="section-title reveal">Where I've Worked</h2>
+  <div class="exp-card reveal">
+    <div class="exp-header">
+      <div>
+        <div class="exp-role">Engineering Intern</div>
+        <div class="exp-company">Center for Smart Grid, VIT Chennai · Guide: Dr. Sithartan</div>
+      </div>
+      <span class="exp-date">May 2025 – Jul 2025</span>
+    </div>
+    <ul class="exp-bullets">
+      <li>Designed and evaluated a Hybrid Power Generation System integrating solar PV, wind energy, and fuel cell sources.</li>
+      <li>Built an ANN-based MPPT controller for solar PV — modeled on single-diode equations in MATLAB/Simulink.</li>
+      <li>Generated a comprehensive irradiance-temperature dataset and trained a feed-forward ANN (2 inputs · 15 hidden neurons · 1 output).</li>
+      <li>Achieved faster dynamic response and reduced steady-state oscillations vs. conventional MPPT techniques.</li>
+      <li>Explored AI-driven fault detection and system optimization in hybrid renewable energy environments.</li>
+    </ul>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <p class="section-label reveal">04 // Projects</p>
+  <h2 class="section-title reveal">Things I've Built</h2>
+  <div class="projects-grid">
+
+    <div class="project-card reveal">
+      <div class="project-icon">☀️</div>
+      <div class="project-title">ANN-Based MPPT Controller for Solar PV</div>
+      <div class="project-desc">Trained a feed-forward neural network to predict optimal duty cycles for maximum power extraction from solar PV systems, outperforming conventional MPPT methods.</div>
+      <div class="project-tags">
+        <span class="ptag">MATLAB</span>
+        <span class="ptag">ANN</span>
+        <span class="ptag">Power Electronics</span>
+      </div>
+    </div>
+
+    <div class="project-card reveal">
+      <div class="project-icon">⚡</div>
+      <div class="project-title">Real-Time Power Monitoring & PF Correction</div>
+      <div class="project-desc">Designed a real-time power monitoring system using a PZEM module and relay-based capacitor switching to measure electrical parameters and improve power factor.</div>
+      <div class="project-tags">
+        <span class="ptag">PZEM</span>
+        <span class="ptag">Embedded</span>
+        <span class="ptag">IoT</span>
+      </div>
+    </div>
+
+    <div class="project-card reveal">
+      <div class="project-icon">🩺</div>
+      <div class="project-title">SeizureGuard — Bio-Telemetry PCB</div>
+      <div class="project-desc">Compact, low-noise PCB for health monitoring with optimized I²C bus architecture, motion + temperature tracking, heartbeat sensing, and skin conductance analysis.</div>
+      <div class="project-tags">
+        <span class="ptag">KiCad</span>
+        <span class="ptag">PCB Design</span>
+        <span class="ptag">I²C</span>
+      </div>
+    </div>
+
+    <div class="project-card reveal">
+      <div class="project-icon">🤖</div>
+      <div class="project-title">AI-ML Smart Grid State Estimation</div>
+      <div class="project-desc">Implemented an ANN-based power system state estimation model on the IEEE 14-bus system in MATLAB/MATPOWER, beating traditional WLS methods under varying loads.</div>
+      <div class="project-tags">
+        <span class="ptag">MATLAB</span>
+        <span class="ptag">MATPOWER</span>
+        <span class="ptag">ANN</span>
+      </div>
+    </div>
+
+    <div class="project-card reveal">
+      <div class="project-icon">🌡️</div>
+      <div class="project-title">Temperature-Based Fan Speed Control</div>
+      <div class="project-desc">Automatic PWM fan speed controller using Arduino Nano and DHT22 sensor, with LED indicators for temperature zones and real-time regulation.</div>
+      <div class="project-tags">
+        <span class="ptag">Arduino</span>
+        <span class="ptag">PWM</span>
+        <span class="ptag">DHT22</span>
+      </div>
+    </div>
+
+    <div class="project-card reveal">
+      <div class="project-icon">🔄</div>
+      <div class="project-title">DC-DC Buck-Boost Converter & PCB</div>
+      <div class="project-desc">Designed and simulated an inverting buck-boost converter in MATLAB, analyzed voltage gain characteristics, then created full PCB schematic and layout in EasyEDA.</div>
+      <div class="project-tags">
+        <span class="ptag">MATLAB</span>
+        <span class="ptag">EasyEDA</span>
+        <span class="ptag">Power Electronics</span>
+      </div>
+    </div>
+
+    <div class="project-card reveal">
+      <div class="project-icon">🚗</div>
+      <div class="project-title">Adaptive Headlight System (RC Car)</div>
+      <div class="project-desc">Arduino-based LDR-driven headlight controller that auto-adjusts brightness based on ambient light — demonstrated on an RC car for real-time glare reduction.</div>
+      <div class="project-tags">
+        <span class="ptag">Arduino</span>
+        <span class="ptag">LDR</span>
+        <span class="ptag">Embedded</span>
+      </div>
+    </div>
+
+    <div class="project-card reveal">
+      <div class="project-icon">🦗</div>
+      <div class="project-title">GOA-Optimized PID Motor Control</div>
+      <div class="project-desc">Used the Grasshopper Optimization Algorithm to tune PID gains (Kp, Ki, Kd), achieving faster motor response, reduced overshoot, and improved stability in MATLAB/Simulink.</div>
+      <div class="project-tags">
+        <span class="ptag">PID</span>
+        <span class="ptag">GOA</span>
+        <span class="ptag">MATLAB</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- EDUCATION -->
+<section id="education">
+  <p class="section-label reveal">05 // Education</p>
+  <h2 class="section-title reveal">Academic Background</h2>
+  <div class="edu-card reveal">
+    <div>
+      <div class="edu-degree">B.Tech — Electrical & Electronics Engineering</div>
+      <div class="edu-school">Vellore Institute of Technology · VIT Chennai</div>
+      <div class="edu-gpa">Chennai, India · Expected May 2027</div>
+    </div>
+    <div class="edu-badge">
+      <div class="edu-badge-year">2027</div>
+      <div class="edu-badge-label">Expected Grad</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- LANGUAGES & ACTIVITIES -->
+<section id="about">
+  <p class="section-label reveal">06 // More About Me</p>
+  <h2 class="section-title reveal">Languages & Activities</h2>
+  <div class="two-col">
+    <div class="lang-list reveal">
+      <div class="lang-item">
+        <span class="lang-name">English</span>
+        <span class="lang-level">C2 · Bilingual</span>
+      </div>
+      <div class="lang-item">
+        <span class="lang-name">Tamil</span>
+        <span class="lang-level">C2 · Bilingual</span>
+      </div>
+      <div class="lang-item">
+        <span class="lang-name">Hindi</span>
+        <span class="lang-level">C2 · Bilingual</span>
+      </div>
+      <div class="lang-item">
+        <span class="lang-name">Kannada</span>
+        <span class="lang-level">C1 · Advanced</span>
+      </div>
+    </div>
+    <div class="activities-list reveal">
+      <div class="activity-item">
+        <div class="activity-dot"></div>
+        <div class="activity-text"><strong style="color:#fff">Entrepreneurship Cell (E-Cell)</strong> — Active contributor to the end-to-end organization of college-wide events.</div>
+      </div>
+      <div class="activity-item">
+        <div class="activity-dot"></div>
+        <div class="activity-text"><strong style="color:#fff">IPL Auction Lead Auctioneer</strong> — Managed high-pressure bidding with strong communication and coordination.</div>
+      </div>
+      <div class="activity-item">
+        <div class="activity-dot"></div>
+        <div class="activity-text"><strong style="color:#fff">Finance Club</strong> — Engaged in technical discussions on market trends and financial management strategies.</div>
+      </div>
+      <div class="activity-item">
+        <div class="activity-dot"></div>
+        <div class="activity-text">Attended workshops on Power Electronics, Embedded Systems, PCB Design, MATLAB/Simulink, and Renewable Energy Integration.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CONTACT -->
+<section id="contact">
+  <p class="section-label reveal">07 // Contact</p>
+  <h2 class="section-title reveal">Let's Connect</h2>
+  <div class="contact-grid reveal">
+    <a href="mailto:hari2006charan@gmail.com" class="contact-card">
+      <div class="contact-icon">✉️</div>
+      <div>
+        <div class="contact-label">Email</div>
+        <div class="contact-value">hari2006charan@gmail.com</div>
+      </div>
+    </a>
+    <a href="https://www.linkedin.com/in/hari-charan-v-a97b9228a" target="_blank" class="contact-card">
+      <div class="contact-icon">🔗</div>
+      <div>
+        <div class="contact-label">LinkedIn</div>
+        <div class="contact-value">hari-charan-v</div>
+      </div>
+    </a>
+    <a href="tel:+918220446326" class="contact-card">
+      <div class="contact-icon">📱</div>
+      <div>
+        <div class="contact-label">Phone</div>
+        <div class="contact-value">+91 82204 46326</div>
+      </div>
+    </a>
+    <div class="contact-card" style="cursor:default;">
+      <div class="contact-icon">📍</div>
+      <div>
+        <div class="contact-label">Location</div>
+        <div class="contact-value">Chennai, India</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  Built with ⚡ by <span>Hari Charan V</span> · EEE @ VIT Chennai · 2025
+</footer>
+
+<script>
+  // ── ANIMATED GRID CANVAS ──
+  const canvas = document.getElementById('grid-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, dots = [];
+
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+    initDots();
+  }
+
+  function initDots() {
+    dots = [];
+    const count = Math.floor((W * H) / 18000);
+    for (let i = 0; i < count; i++) {
+      dots.push({
+        x: Math.random() * W,
+        y: Math.random() * H,
+        r: Math.random() * 1.5 + 0.3,
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: (Math.random() - 0.5) * 0.3,
+        opacity: Math.random() * 0.6 + 0.1
+      });
+    }
+  }
+
+  function drawGrid() {
+    ctx.clearRect(0, 0, W, H);
+    const gridSize = 60;
+    ctx.strokeStyle = 'rgba(0,229,255,0.04)';
+    ctx.lineWidth = 1;
+    for (let x = 0; x < W; x += gridSize) {
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+    }
+    for (let y = 0; y < H; y += gridSize) {
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+    }
+
+    // dots & connections
+    dots.forEach(d => {
+      d.x += d.vx; d.y += d.vy;
+      if (d.x < 0 || d.x > W) d.vx *= -1;
+      if (d.y < 0 || d.y > H) d.vy *= -1;
+
+      ctx.beginPath();
+      ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(0,229,255,${d.opacity})`;
+      ctx.fill();
+    });
+
+    dots.forEach((a, i) => {
+      dots.slice(i+1).forEach(b => {
+        const dist = Math.hypot(a.x - b.x, a.y - b.y);
+        if (dist < 120) {
+          ctx.beginPath();
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(b.x, b.y);
+          ctx.strokeStyle = `rgba(0,229,255,${0.06 * (1 - dist / 120)})`;
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+      });
+    });
+
+    requestAnimationFrame(drawGrid);
+  }
+
+  window.addEventListener('resize', resize);
+  resize();
+  drawGrid();
+
+  // ── SCROLL REVEAL ──
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(r => observer.observe(r));
+
+  // ── NAV ACTIVE ──
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+  window.addEventListener('scroll', () => {
+    let cur = '';
+    sections.forEach(s => {
+      if (window.scrollY >= s.offsetTop - 120) cur = s.id;
+    });
+    navLinks.forEach(a => {
+      a.style.color = a.getAttribute('href') === `#${cur}` ? 'var(--cyan)' : '';
+    });
+  });
+</script>
+</body>
+</html>
