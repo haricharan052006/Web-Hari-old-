@@ -3,3 +3,4 @@ My work focuses on integrating Neural Networks and Intelligent Control Systems i
 
 Connect with MeGitHub: github.com/haricharan052006Live Portfolio: https://haricharan052006.github.io/Web-Hari-old-/“Engineering systems that are smart, efficient, and real.”This repository contains the foundational work and projects that define my journey into intelligent energy systems.
 this is an old version of portfolio final for testing .
+newer version is done.
